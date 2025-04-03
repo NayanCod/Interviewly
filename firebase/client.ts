@@ -3,13 +3,13 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDGz7L1AedgFGiEzUXLYMdqOFPBpUUtXnE",
-  authDomain: "interviewly-b1985.firebaseapp.com",
-  projectId: "interviewly-b1985",
-  storageBucket: "interviewly-b1985.firebasestorage.app",
-  messagingSenderId: "730492005800",
-  appId: "1:730492005800:web:6473201683e74e6364819d",
-  measurementId: "G-3Z6N7PQ9V2"
+  apiKey: process.env.FIREBASE_CLIENT_API_KEY,
+  authDomain: process.env.FIREBASE_CLIENT_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_CLIENT_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_CLIENT_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_CLIENT_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_CLIENT_APP_ID,
+  measurementId: process.env.FIREBASE_CLIENT_MEASUREMENT_ID
 };
 
 const app = !getApps.length ? initializeApp(firebaseConfig) : getApp();
