@@ -1,35 +1,37 @@
-"use client";
+import dayjs from "dayjs";
+import Link from "next/link";
+import Image from "next/image";
+import { redirect } from "next/navigation";
 
-import { Button } from '@/components/ui/button';
-import { getCurrentUser } from '@/lib/actions/auth.action';
-import { getFeedbackByInterviewId, getInterviewById } from '@/lib/actions/general.action';
-import dayjs from 'dayjs';
-import Image from 'next/image';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import React from 'react'
+import {
+  getFeedbackByInterviewId,
+  getInterviewById,
+} from "@/lib/actions/general.action";
+import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 
-const page = async ({params}: RouteParams) => {
-    const { id } = await params;
-    const user = await getCurrentUser();
+const Feedback = async ({ params }: RouteParams) => {
+  const { id } = await params;
+  const user = await getCurrentUser();
 
-    const interview = await getInterviewById(id);
-    if (!interview) redirect("/");
-    const feedback = await getFeedbackByInterviewId({interviewId: id, userId: user?.id!});
+  const interview = await getInterviewById(id);
+  if (!interview) redirect("/");
 
-    console.log(feedback);
-    
+  const feedback = await getFeedbackByInterviewId({
+    interviewId: id,
+    userId: user?.id!,
+  });
 
   return (
-    <section className='section-feedback'>
-        <div className='flex flex-row justify-center'>
-            <h1 className='text-4xl font-semibold'>
-                Feedback on the Interview -{" "}
-                <span className='capitalize'>{interview?.role}</span>
-            </h1>
-        </div>
+    <section className="section-feedback">
+      <div className="flex flex-row justify-center">
+        <h1 className="text-4xl font-semibold">
+          Feedback on the Interview -{" "}
+          <span className="capitalize">{interview.role}</span> Interview
+        </h1>
+      </div>
 
-        <div className="flex flex-row justify-center ">
+      <div className="flex flex-row justify-center ">
         <div className="flex flex-row gap-5">
           {/* Overall Impression */}
           <div className="flex flex-row gap-2 items-center">
@@ -110,9 +112,8 @@ const page = async ({params}: RouteParams) => {
           </Link>
         </Button>
       </div>
-
     </section>
-  )
-}
+  );
+};
 
-export default page
+export default Feedback;

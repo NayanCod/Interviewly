@@ -1,19 +1,19 @@
-import { generateText } from 'ai';
-import {google} from '@ai-sdk/google'
-import { getRandomInterviewCover } from '@/lib/utils';
-import { db } from '@/firebase/admin';
+import { generateText } from "ai";
+import { google } from "@ai-sdk/google";
+import { getRandomInterviewCover } from "@/lib/utils";
+import { db } from "@/firebase/admin";
 
-export async function GET(){
-    return Response.json({message: 'Hello from VAPI!'}, {status: 200});
+export async function GET() {
+  return Response.json({ message: "Hello from VAPI!" }, { status: 200 });
 }
 
 export async function POST(request: Request) {
-    const { type, role, level, techstack, amount, userid } = await request.json();
+  const { type, role, level, techstack, amount, userid } = await request.json();
 
-    try {
-        const { text: questions } = await generateText({
-            model: google('gemini-2.0-flash-001'),
-            prompt: `Prepare questions for a job interview.
+  try {
+    const { text: questions } = await generateText({
+      model: google("gemini-2.0-flash-001"),
+      prompt: `Prepare questions for a job interview.
         The job role is ${role}.
         The job experience level is ${level}.
         The tech stack used in the job is: ${techstack}.
@@ -25,29 +25,29 @@ export async function POST(request: Request) {
         ["Question 1", "Question 2", "Question 3"]
         
         Thank you! <3`,
-        });
+    });
 
-        const interview = {
-            role, 
-            type,
-            level, 
-            techstack: techstack.split(','),
-            questions: JSON.parse(questions),
-            userId: userid,
-            finalized: true,
-            coverImage: getRandomInterviewCover(),
-            createdAt: new Date().toISOString(),
-        }
+    const interview = {
+      role,
+      type,
+      level,
+      techstack: techstack.split(","),
+      questions: JSON.parse(questions),
+      userId: userid,
+      finalized: true,
+      coverImage: getRandomInterviewCover(),
+      createdAt: new Date().toISOString(),
+    };
 
-        console.log('Interview:', interview);
-        
+    console.log("Interview:", interview);
 
-        await db.collection('interviews').add(interview);
-        return Response.json({ success: true }, { status: 200 });
-    } catch (error) {
-        console.error('Error:', error);
-        return Response.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
-        
-    }
-
+    await db.collection("interviews").add(interview);
+    return Response.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error("Error:", error);
+    return Response.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
