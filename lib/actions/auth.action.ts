@@ -120,3 +120,13 @@ export async function isAuthenticated() {
   const user = await getCurrentUser();
   return !!user;
 }
+
+export async function logout() {
+  const cookieStore = await cookies();
+  
+  const allCookies = cookieStore.getAll();
+
+  allCookies.forEach((cookie) => {
+    cookieStore.delete(cookie.name);
+  });
+}
