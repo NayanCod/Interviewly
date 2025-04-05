@@ -7,6 +7,7 @@ import { vapi } from '@/lib/vapi.sdk';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import { set } from 'zod';
 
 enum CallStatus {
     INACTIVE = 'INACTIVE',
@@ -26,6 +27,7 @@ const Agent = ({userName, userId, type, interviewId, questions}: AgentProps) => 
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [messages, setMessages] = useState<SavedMessage[]>([]);
+    const [generatingFeedback, setGeneratingFeedback] = useState(false);
 
     useEffect(() => {
         const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
@@ -64,8 +66,9 @@ const Agent = ({userName, userId, type, interviewId, questions}: AgentProps) => 
     }, []);
 
     const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-        console.log('Generate feedback here.');
+        console.log('Generating feedback here.');
 
+        setGeneratingFeedback(true);
         const {success, feedbackId: id} = await createFeedback({
             interviewId: interviewId!,
             userId: userId!,
@@ -73,9 +76,11 @@ const Agent = ({userName, userId, type, interviewId, questions}: AgentProps) => 
         })
 
         if(success && id) {
+            setGeneratingFeedback(false);
             router.push(`/interview/${interviewId}/feedback`);
         }else{
             console.log('Error saving feedback.');
+            setGeneratingFeedback(false);
             router.push("/");
             
         }
@@ -154,11 +159,18 @@ const Agent = ({userName, userId, type, interviewId, questions}: AgentProps) => 
 
         <div className='w-full flex justify-center'>
             {callStatus !== 'ACTIVE' ? (
-                <button className='relative btn-call' onClick={handleCall}>
-                    <span className={cn('absolute animate-ping rounded-full opacity-75', callStatus !== 'CONNECTING' && 'hidden')} />
-                         
-                    <span>{isCallInActiveOrFinished ? 'Call' : 'Connecting . . .'}</span>
-                </button>
+                    generatingFeedback ? (
+                        <div className='relative flex items-center justify-center'>
+                            <span className='absolute animate-ping rounded-full opacity-75' />
+                            <span className='absolute'>Generating feedback...</span>
+                        </div>
+                    ) : (
+                        <button className='relative btn-call' onClick={handleCall}>
+                            <span className={cn('absolute animate-ping rounded-full opacity-75', callStatus !== 'CONNECTING' && 'hidden')} />
+                                 
+                            <span>{isCallInActiveOrFinished ? 'Call' : 'Connecting . . .'}</span>
+                        </button>
+                    )
             ) : (
                 <button className='btn-disconnect cursor-pointer' onClick={handleDisconnect}>
                     End

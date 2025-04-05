@@ -55,8 +55,15 @@ export async function signIn(params: SignInParams) {
     }
 
     await setSessionCookie(idToken);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error signing in", error);
+
+    if (error.code === "auth/invalid-credential") {
+      return {
+        success: false,
+        message: "Invalid credentials",
+      };
+    }
 
     return {
       success: false,

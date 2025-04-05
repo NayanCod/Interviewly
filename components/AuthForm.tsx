@@ -16,6 +16,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase/client";
 import { signIn, signUp } from "@/lib/actions/auth.action";
+import { useState } from "react";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -29,6 +30,7 @@ const authFormSchema = (type: FormType) => {
 const AuthForm = ({ type }: { type: FormType }) => {
   const router = useRouter();
   const formSchema = authFormSchema(type);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,6 +45,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     try {
       if (type === "sign-up") {
         const { name, email, password } = values;
+        setLoading(true);
 
         const userCredentials = await createUserWithEmailAndPassword(
           auth,
@@ -59,14 +62,17 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
         if (!result?.success) {
           toast.error(result?.message);
+          setLoading(false);
           return;
         }
 
         toast.success("Account created successfully. Please sign in!");
+        setLoading(false);
         router.push("/sign-in");
       } else {
         const { email, password } = values;
 
+        setLoading(true);
         const userCredentials = await signInWithEmailAndPassword(
           auth,
           email,
@@ -77,20 +83,25 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
         if (!idToken) {
           toast.error("Sign in failed");
+          setLoading(false);
           return;
         }
 
-        await signIn({
+        const res = await signIn({
           email,
           idToken,
         });
 
+        console.log("signin res: ", res);
+
         toast.success("Sign in successfully!");
+        setLoading(false);
         router.push("/");
       }
     } catch (error) {
-      console.error(error);
+      console.log("error", error);
       toast.error(`There was an error ${error}`);
+      setLoading(false);
     }
   }
 
@@ -133,8 +144,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
               placeholder="Enter Your Password"
               type="password"
             />
-            <Button className="btn" type="submit">
-              {isSignIn ? "Sign in" : "Create an Account"}
+            <Button className="btn" type="submit" disabled={loading}>
+              {isSignIn && !loading && "Sign in"}
+              {!isSignIn && !loading && "Create an account"}
+              {!isSignIn && loading && "Creating an account..."}
+              {isSignIn && loading && "Signing in..."}
             </Button>
           </form>
         </Form>
