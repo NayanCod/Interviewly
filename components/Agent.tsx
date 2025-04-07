@@ -7,7 +7,6 @@ import { vapi } from "@/lib/vapi.sdk";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { set } from "zod";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
@@ -83,8 +82,8 @@ const Agent = ({
       router.push(`/interview/${interviewId}/feedback`);
     } else {
       console.log("Error saving feedback.");
-      setGeneratingFeedback(false);
       router.push("/");
+      setGeneratingFeedback(false);
     }
   };
 
@@ -183,7 +182,7 @@ const Agent = ({
         {callStatus !== "ACTIVE" ? (
           generatingFeedback ? (
             <div className="relative flex items-center justify-center">
-              <p className="text-sm font-semibold text-primary-200 text-center">
+              <p className="text-sm bg-dark-200 py-3 rounded-full font-semibold text-primary-200 text-center animate-pulse duration-1000">
                 Generating feedback...
               </p>
             </div>
