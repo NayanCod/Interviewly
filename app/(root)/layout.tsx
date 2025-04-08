@@ -15,7 +15,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { getCurrentUser, isAuthenticated, logout } from "@/lib/actions/auth.action";
+import {
+  getCurrentUser,
+  isAuthenticated,
+  logout,
+} from "@/lib/actions/auth.action";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -49,9 +53,29 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
                 <p className="text-sm text-muted-foreground">{user?.email}</p>
               </div>
               <div className="flex flex-col gap-4 items-start justify-center">
-                <Button asChild className="btn-primary max-sm:w-full w-[100%]">
-                  <Link href="/interview">Start an Interview</Link>
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="btn-primary max-sm:w-full w-[100%]">
+                      Start an Interview
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Choose the type of interview you want to take.
+                      </AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction asChild>
+                      <Link href="/interview">Voice-Based Interview</Link>
+                      </AlertDialogAction>
+                      <AlertDialogAction asChild>
+                      <Link href="/text-interview">Text-Based Interview</Link>
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
                 <AlertDialog>
                   <AlertDialogTrigger className="w-[100%] !bg-destructive-200 !text-primary-100 hover:!bg-destructive-200/80 !rounded-full !font-bold px-5 cursor-pointer min-h-10">
                     Logout
@@ -64,7 +88,9 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={logout}>Continue</AlertDialogAction>
+                      <AlertDialogAction onClick={logout}>
+                        Continue
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
