@@ -85,6 +85,11 @@ interface SignUpParams {
 
 type FormType = "sign-in" | "sign-up";
 
+interface TextInterviewFormProps {
+  userId: string | undefined;
+  state: 'generate' | string;
+}
+
 interface InterviewFormProps {
   interviewId: string;
   role: string;
