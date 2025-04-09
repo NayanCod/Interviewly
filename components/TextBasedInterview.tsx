@@ -134,19 +134,18 @@ const TextBasedInterview = ({
             </div>
 
             <div className="flex md:flex-row flex-col-reverse gap-4">
-        <Button className="btn-secondary flex-1 w-full">
-          <Link href="/" className="flex w-full justify-center">
-            <p className="text-sm font-semibold text-primary-200 text-center">
-              Back to dashboard
-            </p>
-          </Link>
-        </Button>
+              <Button className="btn-secondary flex-1 w-full">
+                <Link href="/" className="flex w-full justify-center">
+                  <p className="text-sm font-semibold text-primary-200 text-center">
+                    Back to dashboard
+                  </p>
+                </Link>
+              </Button>
 
-
-<Button type="submit" className="btn-primary flex-1 w-full">
+              <Button type="submit" className="btn-primary flex-1 w-full">
                 {generatingFeedback ? "Generating Feedback..." : "Submit"}
               </Button>
-      </div>
+            </div>
           </form>
         </Form>
       </div>

@@ -83,8 +83,6 @@ const TextInterviewForm = ({ userId, state }: TextInterviewFormProps) => {
     }
   }
 
-  //   const generateInterview = state === "generate";
-
   return (
     <div className="card-border lg:min-w-[600px] justify-center">
       <div className="flex flex-col gap-6 card py-10 px-10">
