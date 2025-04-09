@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import DisplayTechIcons from "./DisplayTechIcons";
 import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 const InterviewCard = async ({
   id,
   userId,
@@ -62,13 +63,34 @@ const InterviewCard = async ({
 
         <div className="flex flex-row justify-between">
           <DisplayTechIcons techStack={techstack} />
-          <Button className="btn-primary">
-            <Link
+          
+            {
+              feedback ? <Button asChild className="btn-primary"><Link href={`/interview/${id}/feedback`}>
+                Check Feedback
+              </Link></Button> : (
+                <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="btn-primary">
+                    Give Interview
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="mt-2">
+                  <DropdownMenuItem>
+                  <Link href={`/interview/${id}`}>Voice-Based Interview</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                  <Link href={`/text-interview/${id}`}>Text-Based Interview</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              )
+            }
+            {/* <Link
               href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}
             >
               {feedback ? "Check Feedback" : "Give Interview"}
-            </Link>
-          </Button>
+            </Link> */}
         </div>
       </div>
     </div>

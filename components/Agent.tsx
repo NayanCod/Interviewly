@@ -7,6 +7,7 @@ import { vapi } from "@/lib/vapi.sdk";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
@@ -79,8 +80,10 @@ const Agent = ({
 
     if (success && id) {
       setGeneratingFeedback(false);
+      toast.success("Feedback generated successfully!");
       router.push(`/interview/${interviewId}/feedback`);
     } else {
+      toast.error("Error saving feedback.");
       console.log("Error saving feedback.");
       router.push("/");
       setGeneratingFeedback(false);

@@ -49,9 +49,6 @@ const page = async () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* <Button asChild className="btn-primary max-sm:w-full">
-            <Link href="/interview">Start an Interview</Link>
-          </Button> */}
         </div>
         <Image
           src="/robot.png"

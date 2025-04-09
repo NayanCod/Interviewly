@@ -1,5 +1,5 @@
-import Agent from '@/components/Agent';
 import DisplayTechIcons from '@/components/DisplayTechIcons';
+import TextBasedInterview from '@/components/TextBasedInterview';
 import { getCurrentUser } from '@/lib/actions/auth.action';
 import { getInterviewById } from '@/lib/actions/general.action';
 import { getRandomInterviewCover } from '@/lib/utils';
@@ -7,13 +7,13 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
-const page = async ({params} : RouteParams) => {
+const page = async ({ params }: RouteParams) => {
     const { id } = await params;
     const user = await getCurrentUser();
 
     const interview = await getInterviewById(id);
+    
     if (!interview) redirect("/");
-
   return (
     <>
         <div className='flex flex-row gap-4 justify-between items-start'>
@@ -28,7 +28,7 @@ const page = async ({params} : RouteParams) => {
             <p className='bg-dark-200 px-4 py-2 rounded-lg h-fir capitalize'>{interview?.type}</p>
         </div>
 
-        <Agent userName={user?.name || 'there'} interviewId={id} type="interview" questions={interview?.questions} userId={user?.id}/>
+        <TextBasedInterview interviewId={id} userId={user?.id} questions={interview?.questions} username={user?.name} type={interview?.type}/>
     </>
   )
 }

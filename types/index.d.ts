@@ -27,9 +27,15 @@ interface Interview {
 
 interface CreateFeedbackParams {
   interviewId: string;
-  userId: string;
-  transcript: { role: string; content: string }[];
+  userId: string | undefined;
+  transcript?: { role: string; content: string }[];
   feedbackId?: string;
+  generalQuestions?: {
+    introduction: string;
+    motivation: string;
+    experience: string;
+  };
+  actualQuestions?: { question: string; answer: string }[];
 }
 
 interface User {
@@ -88,6 +94,13 @@ type FormType = "sign-in" | "sign-up";
 interface TextInterviewFormProps {
   userId: string | undefined;
   state: 'generate' | string;
+}
+interface TextBasedInterview {
+  userId: string | undefined;
+  interviewId: string;
+  username: string | undefined;
+  type: string;
+  questions: string[];
 }
 
 interface InterviewFormProps {
