@@ -6,7 +6,7 @@ import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 
 export async function getInterviewByUserId(
-  userId: string
+  userId: string | undefined
 ): Promise<Interview[] | null> {
   const interviews = await db
     .collection("interviews")
