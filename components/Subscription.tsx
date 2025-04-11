@@ -104,7 +104,7 @@ const Subscription = ({ user }: { user: User }) => {
               <div className="flex flex-col gap-4">
                 <p className="text-sm text-muted-foreground">
                   Pro pack is a one time paid subscription that gives you access
-                  to premium features and benefits.
+                  to unlimited voice interviews.
                 </p>
                 <p className="text-3xl text-center">
                   <span className="line-through text-sm text-gray-400">
