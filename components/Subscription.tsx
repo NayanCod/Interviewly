@@ -79,7 +79,7 @@ const Subscription = ({ user }: { user: User }) => {
     <>
     {
       user?.subscription ? (
-        <Button className="bg-secondary px-2 md:px-4 py-2 rounded-full md:rounded-lg flex flex-row gap-2 items-center hover:bg-secondary">
+        <Button className="bg-secondary px-2 md:px-4 py-2 rounded-full md:rounded-lg md:flex md:flex-row hidden gap-2 items-center hover:bg-secondary">
         <Image src="/crown.png" alt="pro-pack" width={20} height={20} className="md:block hidden"/>
         <p className="text-primary-100 text-sm font-semibold md:block hidden">
           Active

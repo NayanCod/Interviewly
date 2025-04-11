@@ -1,4 +1,4 @@
-
+import AlertSub from "@/components/AlertSub";
 import Subscription from "@/components/Subscription";
 import {
   AlertDialog,
@@ -41,7 +41,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
-
+      <AlertSub/>
       <div className="root-layout">
         <nav className="flex flex-row justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
@@ -49,7 +49,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
             <h2 className="text-primary-100">Interviewly</h2>
           </Link>
           <div className="flex flex-row gap-5 items-center">
-            <Subscription user={user}/>
+            <Subscription user={user} />
             <Popover>
               <PopoverTrigger>
                 <Avatar className="cursor-pointer">
@@ -64,6 +64,17 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
                     <p className="text-sm text-muted-foreground">
                       {user?.email}
                     </p>
+                    <Button className="bg-secondary w-full px-2 md:px-4 py-2 rounded-full md:rounded-lg flex flex-row md:hidden gap-2 items-center hover:bg-secondary">
+                      <Image
+                        src="/crown.png"
+                        alt="pro-pack"
+                        width={20}
+                        height={20}
+                      />
+                      <p className="text-primary-100 text-sm font-semibold">
+                        Active
+                      </p>
+                    </Button>
                   </div>
                   <div className="flex flex-col gap-4 items-start justify-center">
                     <AlertDialog>
