@@ -58,8 +58,10 @@ export async function getFeedbackByInterviewId(
     .get();
 
   if (feedback.empty) return null;
-  
+
   const feedbackDoc = feedback.docs[0];
+
+  // console.log("feedback by userId", feedbackDoc.data());
 
   return {
     id: feedbackDoc.id,
@@ -67,11 +69,23 @@ export async function getFeedbackByInterviewId(
   } as Feedback;
 }
 
+export async function getUserInterviewCountByUserId(userId: string) {
+  const user = await db.collection("users").doc(userId).get();
+  const hasSubscription = user.data()?.subscription || false;
+  const count = (await db.collection("feedback")
+    .where("userId", "==", userId)
+    .where("type", "==", "voice")
+    .count()
+    .get()).data().count;
+
+  return { hasSubscription, count };
+}
+
 export async function createFeedback(params: CreateFeedbackParams) {
-  const { interviewId, userId, transcript, generalQuestions, actualQuestions } = params;
+  const { interviewId, userId, transcript, generalQuestions, actualQuestions, type } =
+    params;
 
   try {
-
     let formattedTranscript = "";
     if (transcript) {
       formattedTranscript = transcript
@@ -120,7 +134,6 @@ export async function createFeedback(params: CreateFeedbackParams) {
       - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
     `;
 
-
     const {
       object: {
         totalScore,
@@ -147,6 +160,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
       strengths,
       areasForImprovement,
       finalAssessment,
+      type: type,
       createdAt: new Date().toISOString(),
     });
 
@@ -156,6 +170,25 @@ export async function createFeedback(params: CreateFeedbackParams) {
     };
   } catch (error) {
     console.log("Error saving feedback", error);
+    return { success: false };
+  }
+}
+
+export async function userPurchasedSubscription(userId: string) {
+  try {
+    const subscription = await db.collection("users").doc(userId).update({
+      subscription: true,
+    });
+
+    if (!subscription) return null;
+    console.log("subscription", subscription);
+
+    return {
+      success: true,
+      message: "Subscription updated successfully",
+    };
+  } catch (error) {
+    console.log("Error updating subscription", error);
     return { success: false };
   }
 }

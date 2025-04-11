@@ -58,6 +58,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           name: name!,
           email,
           password,
+          subscription: false,
         });
 
         if (!result?.success) {

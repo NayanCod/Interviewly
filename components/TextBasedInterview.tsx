@@ -65,6 +65,7 @@ const TextBasedInterview = ({
           experience: values.experience,
         },
         actualQuestions: values.questions,
+        type: "text",
       });
 
       if (success && id) {

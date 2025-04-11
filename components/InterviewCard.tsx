@@ -1,3 +1,5 @@
+
+
 import React from "react";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -7,6 +9,7 @@ import Link from "next/link";
 import DisplayTechIcons from "./DisplayTechIcons";
 import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 const InterviewCard = async ({
   id,
   userId,
@@ -15,9 +18,11 @@ const InterviewCard = async ({
   techstack,
   createdAt,
 }: InterviewCardProps) => {
+  const user = await getCurrentUser();
+
   const feedback =
-    userId && id
-      ? await getFeedbackByInterviewId({ interviewId: id, userId })
+    user && id && user.id === userId
+      ? await getFeedbackByInterviewId({ interviewId: id, userId: user.id })
       : null;
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
   const formattedDate = dayjs(
@@ -86,11 +91,6 @@ const InterviewCard = async ({
               </DropdownMenu>
               )
             }
-            {/* <Link
-              href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}
-            >
-              {feedback ? "Check Feedback" : "Give Interview"}
-            </Link> */}
         </div>
       </div>
     </div>

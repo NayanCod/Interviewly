@@ -36,12 +36,14 @@ interface CreateFeedbackParams {
     experience: string;
   };
   actualQuestions?: { question: string; answer: string }[];
+  type: string;
 }
 
 interface User {
   name: string;
   email: string;
   id: string;
+  subscription: boolean;
 }
 
 interface InterviewCardProps {
@@ -51,6 +53,7 @@ interface InterviewCardProps {
   type: string;
   techstack: string[];
   createdAt?: string;
+  currUser?: string;
 }
 
 interface AgentProps {
@@ -87,6 +90,7 @@ interface SignUpParams {
   name: string;
   email: string;
   password: string;
+  subscription: boolean;
 }
 
 type FormType = "sign-in" | "sign-up";
