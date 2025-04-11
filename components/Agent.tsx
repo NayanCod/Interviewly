@@ -76,6 +76,7 @@ const Agent = ({
       interviewId: interviewId!,
       userId: userId!,
       transcript: messages,
+      type: "voice",
     });
 
     if (success && id) {

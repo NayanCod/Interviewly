@@ -1,7 +1,7 @@
 import Agent from '@/components/Agent';
 import DisplayTechIcons from '@/components/DisplayTechIcons';
 import { getCurrentUser } from '@/lib/actions/auth.action';
-import { getInterviewById } from '@/lib/actions/general.action';
+import { getUserInterviewCountByUserId, getInterviewById } from '@/lib/actions/general.action';
 import { getRandomInterviewCover } from '@/lib/utils';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
@@ -11,8 +11,17 @@ const page = async ({params} : RouteParams) => {
     const { id } = await params;
     const user = await getCurrentUser();
 
-    const interview = await getInterviewById(id);
+    const [interview, userInterview] = await Promise.all([
+        getInterviewById(id),
+        getUserInterviewCountByUserId(user?.id ?? '')
+    ]);
+
+    // const interview = await getInterviewById(id);
     if (!interview) redirect("/");
+
+    if(!userInterview?.hasSubscription && userInterview?.count === 2){
+        redirect("/subscription");
+    }
 
   return (
     <>
