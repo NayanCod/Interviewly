@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,9 @@ import { toast } from "sonner";
 import { userPurchasedSubscription } from "@/lib/actions/general.action";
 
 const Subscription = ({ user }: { user: User }) => {
+  const [open, setOpen] = useState(false);
   const processPayment = async () => {
+    setOpen(false);
     // e.preventDefault();
     try {
       const orderData = await fetch("/api/order", { method: "POST" }).then(
@@ -86,7 +88,7 @@ const Subscription = ({ user }: { user: User }) => {
         </div>
       </Button>
       ) : (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="bg-secondary px-2 md:px-4 py-2 rounded-full md:rounded-lg flex flex-row gap-2 items-center hover:bg-secondary/70 cursor-pointer">
             <Image src="/crown.png" alt="pro-pack" width={20} height={20} />
@@ -106,19 +108,19 @@ const Subscription = ({ user }: { user: User }) => {
                   Pro pack is a one time paid subscription that gives you access
                   to unlimited voice interviews.
                 </div>
-                <div className="text-3xl text-center">
+                <div className="text-3xl text-center my-4 font-bold">
                   <span className="line-through text-sm text-gray-400">
                     ₹99
                   </span>
                   ₹49
                 </div>
-                <div className="flex flex-row gap-2 items-center justify-between">
+                <div className="flex flex-row gap-2 items-center justify-between my-2">
                   <div className="text-sm font-semibold">
                     Unlimited Voice Interviews
                   </div>
                   <div className="text-sm text-muted-foreground">✅</div>
                 </div>
-                <div className="flex flex-row gap-2 items-center justify-between">
+                <div className="flex flex-row gap-2 items-center justify-between my-2">
                   <div className="text-sm font-semibold">Unlimited Feedback</div>
                   <div className="text-sm text-muted-foreground">✅</div>
                 </div>

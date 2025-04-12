@@ -12,19 +12,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { getCurrentUser } from "@/lib/actions/auth.action";
 const InterviewCard = async ({
   id,
-  userId,
   role,
   type,
   techstack,
   createdAt,
 }: InterviewCardProps) => {
   const user = await getCurrentUser();
-
-console.log("interview card data's userid: ", userId);
-console.log("current user id: ", user?.id);
-
-
-
   const feedback =
     user && id
       ? await getFeedbackByInterviewId({ interviewId: id, userId: user.id })
