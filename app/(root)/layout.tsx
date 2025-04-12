@@ -49,7 +49,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
             <h2 className="text-primary-100">Interviewly</h2>
           </Link>
           <div className="flex flex-row gap-5 items-center">
-            <Subscription user={user} />
+            {user && <Subscription user={user} />}
             <Popover>
               <PopoverTrigger>
                 <Avatar className="cursor-pointer">

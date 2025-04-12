@@ -8,11 +8,6 @@ const monaSans = Mona_Sans({
   subsets: ["latin"],
 });
 
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
-
 export const metadata: Metadata = {
   title: "Interviewly",
   description: "An AI-powered platform for preparing for mock interviews",
