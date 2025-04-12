@@ -17,6 +17,7 @@ import {
 import { auth } from "@/firebase/client";
 import { signIn, signUp } from "@/lib/actions/auth.action";
 import { useState } from "react";
+import { Eye, EyeClosed } from "lucide-react";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -31,6 +32,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const router = useRouter();
   const formSchema = authFormSchema(type);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -138,13 +140,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
               placeholder="Enter Your Email"
               type="email"
             />
+            <div className="relative">
             <FormField
               control={form.control}
               name="password"
               label="Password"
               placeholder="Enter Your Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
             />
+            <button type="button" className="absolute right-3 top-1/2 text-sm text-gray-500" onClick={() => setShowPassword((prev) => !prev)}>{showPassword ? <EyeClosed size={20}/> : <Eye size={20}/>}</button>
+            </div>
             <Button className="btn" type="submit" disabled={loading}>
               {isSignIn && !loading && "Sign in"}
               {!isSignIn && !loading && "Create an account"}

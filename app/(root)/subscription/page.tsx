@@ -81,9 +81,9 @@ const Subscription = ({ user }: { user: User }) => {
       user?.subscription ? (
         <Button className="bg-secondary px-2 md:px-4 py-2 rounded-full md:rounded-lg flex flex-row gap-2 items-center hover:bg-secondary">
         <Image src="/crown.png" alt="pro-pack" width={20} height={20} className="md:block hidden"/>
-        <p className="text-primary-100 text-sm font-semibold md:block hidden">
+        <div className="text-primary-100 text-sm font-semibold md:block hidden">
           Active
-        </p>
+        </div>
       </Button>
       ) : (
         <Dialog open>
@@ -93,11 +93,11 @@ const Subscription = ({ user }: { user: User }) => {
               Upgrade to premium
             </DialogTitle>
             <DialogDescription>
-              <div className="flex flex-col gap-4">
-                <p className="text-sm text-muted-foreground">
+              {/* <div className="flex flex-col gap-4"> */}
+                <div className="text-sm text-muted-foreground">
                   Pro pack is a one time paid subscription that gives you access
                   to premium features and benefits for life time.
-                </p>
+                </div>
                 <h1 className="text-3xl text-center">
                   <span className="line-through text-sm text-gray-400">
                     ₹99
@@ -105,16 +105,16 @@ const Subscription = ({ user }: { user: User }) => {
                   ₹49
                 </h1>
                 <div className="flex flex-row gap-2 items-center justify-between">
-                  <p className="text-sm font-semibold">
+                  <div className="text-sm font-semibold">
                     Unlimited Voice Interviews
-                  </p>
-                  <p className="text-sm text-muted-foreground">✅</p>
+                  </div>
+                  <div className="text-sm text-muted-foreground">✅</div>
                 </div>
                 <div className="flex flex-row gap-2 items-center justify-between">
-                  <p className="text-sm font-semibold">Unlimited Feedback</p>
-                  <p className="text-sm text-muted-foreground">✅</p>
+                  <div className="text-sm font-semibold">Unlimited Feedback</div>
+                  <div className="text-sm text-muted-foreground">✅</div>
                 </div>
-              </div>
+              {/* </div> */}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
