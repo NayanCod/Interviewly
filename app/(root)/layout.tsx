@@ -54,7 +54,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
               <PopoverTrigger>
                 <Avatar className="cursor-pointer">
                   <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>{user?.name}</AvatarFallback>
+                  <AvatarFallback>{user?.name.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
               </PopoverTrigger>
               <PopoverContent className="w-50">

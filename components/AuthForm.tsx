@@ -110,9 +110,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
   const isSignIn = type === "sign-in";
 
+  const handleGoogleSignIn = async () => {
+    toast.info("Google sign in is not implemented yet.");
+  }
+
   return (
     <div className="card-border lg:min-w-[556px]">
-      <div className="flex flex-col gap-6 card py-14 px-10">
+      <div className="flex flex-col gap-6 card md:py-14 py-12 px-10">
         <div className="flex flex-row gap-2 justify-center">
           <Image src="/logo.svg" alt="logo" width={38} height={32} />
           <h2 className="text-primary-100">Interviewly</h2>
@@ -141,14 +145,20 @@ const AuthForm = ({ type }: { type: FormType }) => {
               type="email"
             />
             <div className="relative">
-            <FormField
-              control={form.control}
-              name="password"
-              label="Password"
-              placeholder="Enter Your Password"
-              type={showPassword ? "text" : "password"}
-            />
-            <button type="button" className="absolute right-3 top-1/2 text-sm text-gray-500" onClick={() => setShowPassword((prev) => !prev)}>{showPassword ? <EyeClosed size={20}/> : <Eye size={20}/>}</button>
+              <FormField
+                control={form.control}
+                name="password"
+                label="Password"
+                placeholder="Enter Your Password"
+                type={showPassword ? "text" : "password"}
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 text-sm text-gray-500"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
+              </button>
             </div>
             <Button className="btn" type="submit" disabled={loading}>
               {isSignIn && !loading && "Sign in"}
@@ -158,6 +168,24 @@ const AuthForm = ({ type }: { type: FormType }) => {
             </Button>
           </form>
         </Form>
+
+        <div className="flex flex-row items-center justify-center gap-2">
+          <hr className="bg-white w-full" />
+          <p className="text-sm text-gray-400">OR</p>
+          <hr className="bg-white w-full" />
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <Button
+            className="btn-google w-full cursor-pointer"
+            onClick={handleGoogleSignIn}
+            disabled={loading}
+          >
+            <Image alt="google" src="/google.png" width={20} height={20} />
+            Continue with Google
+          </Button>
+        </div>
+
         <p className="text-center">
           {isSignIn ? "No account yet?" : "Have an account already?"}
           <Link
