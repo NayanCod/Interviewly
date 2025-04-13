@@ -35,8 +35,15 @@ const Feedback = async ({ params }: RouteParams) => {
         <div className="flex flex-row gap-5">
           <div className="flex flex-row gap-2 items-center">
             <Image src="/star.svg" width={22} height={22} alt="star" />
-            <p>
+            <p className="md:block hidden">
               Overall Impression:{" "}
+              <span className="text-primary-200 font-bold">
+                {feedback?.totalScore}
+              </span>
+              /100
+            </p>
+            <p className="md:hidden block">
+              Impression{" "}
               <span className="text-primary-200 font-bold">
                 {feedback?.totalScore}
               </span>
@@ -44,7 +51,7 @@ const Feedback = async ({ params }: RouteParams) => {
             </p>
           </div>
 
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-2 items-center">
             <Image src="/calendar.svg" width={22} height={22} alt="calendar" />
             <p>
               {feedback?.createdAt
