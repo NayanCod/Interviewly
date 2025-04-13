@@ -53,7 +53,7 @@ const TextBasedInterview = ({
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("Form Submitted: ", values);
+    // console.log("Form Submitted: ", values);
     setGeneratingFeedback(true);
     try {
       const { success, feedbackId: id } = await createFeedback({

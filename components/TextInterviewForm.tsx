@@ -37,7 +37,7 @@ const TextInterviewForm = ({ userId, state }: TextInterviewFormProps) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("values: ", values);
+    // console.log("values: ", values);
     
     try {
       if (state === "generate") {
@@ -61,7 +61,7 @@ const TextInterviewForm = ({ userId, state }: TextInterviewFormProps) => {
 
         const result = await generateInterview.json();
 
-        console.log("generateInterview result: ", result);
+        // console.log("generateInterview result: ", result);
         
         if (!result?.success) {
           toast.error(result?.message);

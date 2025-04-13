@@ -12,10 +12,12 @@ import FormField from "./FormField";
 import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/firebase/client";
-import { signIn, signUp } from "@/lib/actions/auth.action";
+import { googleSignIn, signIn, signUp } from "@/lib/actions/auth.action";
 import { useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
 
@@ -95,7 +97,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           idToken,
         });
 
-        console.log("signin res: ", res);
+        // console.log("signin res: ", res);
 
         toast.success("Sign in successfully!");
         router.push("/");
@@ -111,8 +113,36 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const isSignIn = type === "sign-in";
 
   const handleGoogleSignIn = async () => {
-    toast.info("Google sign in is not implemented yet.");
-  }
+    const provider = new GoogleAuthProvider();
+    try {
+      setLoading(true);
+      const result = await signInWithPopup(auth, provider);
+      const user = result?.user;
+
+      // Get the ID token for backend verification
+      const idToken = await user.getIdToken();
+      
+      // Send the token to your backend for further processing
+      const res = await googleSignIn({
+        email: user.email!,
+        name: user.displayName!,
+        photoURL: user.photoURL!,
+        idToken,
+      });
+      
+      if (res?.success) {
+        toast.success("Signed in with Google successfully!");
+        router.push("/");
+      } else {
+        toast.error(res?.message || "Google Sign-In failed");
+      }
+    } catch (error) {
+      console.error("Google Sign-In Error:", error);
+      toast.error("There was an error signing in with Google.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="card-border lg:min-w-[556px]">

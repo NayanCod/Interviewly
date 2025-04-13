@@ -44,6 +44,8 @@ interface User {
   email: string;
   id: string;
   subscription: boolean;
+  createdAt?: string;
+  photoURL?: string;
 }
 
 interface InterviewCardProps {
@@ -58,6 +60,7 @@ interface InterviewCardProps {
 
 interface AgentProps {
   userName: string;
+  photoURL?: string;
   userId?: string;
   interviewId?: string;
   feedbackId?: string;
@@ -83,6 +86,13 @@ interface GetLatestInterviewsParams {
 interface SignInParams {
   email: string;
   idToken: string;
+}
+
+interface GoogleSignInParams{
+  email: string;
+  idToken: string;
+  name: string;
+  photoURL: string;
 }
 
 interface SignUpParams {

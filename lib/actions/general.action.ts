@@ -181,7 +181,7 @@ export async function userPurchasedSubscription(userId: string) {
     });
 
     if (!subscription) return null;
-    console.log("subscription", subscription);
+    // console.log("subscription", subscription);
 
     return {
       success: true,

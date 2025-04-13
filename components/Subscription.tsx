@@ -103,7 +103,6 @@ const Subscription = ({ user }: { user: User }) => {
               What&apos;s Inside Pro Pack{" "}
             </DialogTitle>
             <DialogDescription>
-              {/* <div className="flex flex-col gap-4"> */}
                 <div className="text-sm text-muted-foreground">
                   Pro pack is a one time paid subscription that gives you access
                   to unlimited voice interviews.
@@ -124,7 +123,6 @@ const Subscription = ({ user }: { user: User }) => {
                   <div className="text-sm font-semibold">Unlimited Feedback</div>
                   <div className="text-sm text-muted-foreground">✅</div>
                 </div>
-              {/* </div> */}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
