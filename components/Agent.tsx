@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
@@ -22,6 +23,7 @@ interface SavedMessage {
 }
 
 const Agent = ({
+  photoURL,
   userName,
   userId,
   type,
@@ -69,7 +71,7 @@ const Agent = ({
   }, []);
 
   const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-    console.log("Generating feedback here.");
+    // console.log("Generating feedback here.");
 
     setGeneratingFeedback(true);
     const { success, feedbackId: id } = await createFeedback({
@@ -154,13 +156,12 @@ const Agent = ({
         </div>
         <div className="card-border">
           <div className="card-content">
-            <Image
-              src="/user-avatar.png"
-              alt="user avatar"
-              width={540}
-              height={540}
-              className="rounded-full object-cover size-[120px]"
-            />
+              <Avatar className="cursor-pointer w-[120px] h-[120px]">
+              <AvatarImage src={photoURL} />
+              <AvatarFallback>
+                {userName.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
             <h3>{userName}</h3>
           </div>
         </div>

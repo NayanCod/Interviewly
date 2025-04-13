@@ -2,6 +2,7 @@
 
 import { auth, db } from "@/firebase/admin";
 import { cookies } from "next/headers";
+import { toast } from "sonner";
 
 const ONE_WEEK = 60 * 60 * 24 * 7;
 
@@ -20,6 +21,7 @@ export async function signUp(params: SignUpParams) {
       name,
       email,
       subscription,
+      createdAt: new Date().toISOString(),
     });
 
     return {
@@ -73,6 +75,58 @@ export async function signIn(params: SignInParams) {
   }
 }
 
+export async function googleSignIn(params: GoogleSignInParams) {
+  const { email, idToken, name, photoURL } = params;
+
+  try {
+    // Check if the user already exists in the database
+    // const userRecord = await db.collection("users").where("email", "==", email).get();
+    const decodedToken = await auth.verifyIdToken(idToken);
+const uid = decodedToken.uid;
+
+// Check if the user exists in the database
+const userRecord = await db.collection("users").doc(uid).get();
+
+    if (!userRecord.exists) {
+      // If the user does not exist, create a new user in the database
+      const newUser = {
+        name,
+        email,
+        photoURL,
+        subscription: false, // Default subscription status
+        createdAt: new Date().toISOString(),
+      };
+
+      await db.collection("users").doc(uid).set(newUser);
+    }
+
+    // Set the session cookie for the user
+    await setSessionCookie(idToken);
+
+    // console.log("setup: ", setup);
+    
+
+    return {
+      success: true,
+      message: "Signed in with Google successfully!",
+    };
+  } catch (error: any) {
+    console.error("Error signing in with Google", error);
+
+    if (error.code === "auth/invalid-credential") {
+      return {
+        success: false,
+        message: "Invalid credentials",
+      };
+    }
+
+    return {
+      success: false,
+      message: "Failed to sign in with Google",
+    };
+  }
+}
+
 export async function setSessionCookie(idToken: string) {
   const cookieStore = await cookies();
 
@@ -112,6 +166,7 @@ export async function getCurrentUser(): Promise<User | null> {
       id: userRecord.id,
     } as User;
   } catch (error) {
+    toast.error("Session expired. Please sign in again.");
     console.error("Error getting current user", error);
     return null;
   }

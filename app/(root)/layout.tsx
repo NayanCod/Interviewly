@@ -41,7 +41,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
-      {!user?.subscription && <AlertSub/>}
+      {!user?.subscription && <AlertSub />}
       <div className="root-layout">
         <nav className="flex flex-row justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
@@ -53,28 +53,40 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
             <Popover>
               <PopoverTrigger>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>{user?.name.charAt(0).toUpperCase()}</AvatarFallback>
+                  <AvatarImage src={user?.photoURL} />
+                  <AvatarFallback>
+                    {user?.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
               </PopoverTrigger>
               <PopoverContent className="w-50">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <h4 className="font-medium leading-none">{user?.name}</h4>
+                    <div className="font-medium leading-none flex flex-row gap-2 items-center">
+                      <Avatar className="cursor-pointer">
+                        <AvatarImage src={user?.photoURL} />
+                        <AvatarFallback>
+                          {user?.name.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      {user?.name}
+                    </div>
                     <p className="text-sm text-muted-foreground">
                       {user?.email}
                     </p>
-                    {user?.subscription && <Button className="bg-secondary w-full px-2 md:px-4 py-2 rounded-full md:rounded-lg flex flex-row md:hidden gap-2 items-center hover:bg-secondary">
-                      <Image
-                        src="/crown.png"
-                        alt="pro-pack"
-                        width={20}
-                        height={20}
-                      />
-                      <p className="text-primary-100 text-sm font-semibold">
-                        Active
-                      </p>
-                    </Button>}
+                    {user?.subscription && (
+                      <Button className="bg-secondary w-full px-2 md:px-4 py-2 rounded-full md:rounded-lg flex flex-row md:hidden gap-2 items-center hover:bg-secondary">
+                        <Image
+                          src="/crown.png"
+                          alt="pro-pack"
+                          width={20}
+                          height={20}
+                        />
+                        <p className="text-primary-100 text-sm font-semibold">
+                          Active
+                        </p>
+                      </Button>
+                    )}
                   </div>
                   <div className="flex flex-col gap-4 items-start justify-center">
                     <AlertDialog>

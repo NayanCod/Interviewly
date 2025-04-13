@@ -19,6 +19,7 @@ const page = async () => {
 
       <Agent
         userName={user?.name ?? "there"}
+        photoURL={user?.photoURL}
         userId={user?.id}
         type="generate"
       />
