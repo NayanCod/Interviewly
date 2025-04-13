@@ -14,8 +14,6 @@ const Feedback = async ({ params }: RouteParams) => {
   const { id } = await params;
   const user = await getCurrentUser();
 
-  await new Promise((resolve) => setTimeout(resolve, 20000));
-
   const interview = await getInterviewById(id);
   if (!interview) redirect("/");
 
