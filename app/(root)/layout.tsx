@@ -59,7 +59,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
                   </AvatarFallback>
                 </Avatar>
               </PopoverTrigger>
-              <PopoverContent className="w-50">
+              <PopoverContent className="w-64">
                 <div className="grid gap-4">
                   <div className="space-y-2">
                     <div className="font-medium leading-none flex flex-row gap-2 items-center">
