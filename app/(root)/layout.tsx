@@ -54,7 +54,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
               <PopoverTrigger>
                 <Avatar className="cursor-pointer">
                   <AvatarImage src={user?.photoURL} />
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-blue-950 text-primary-100">
                     {user?.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -65,7 +65,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
                     <div className="font-medium leading-none flex flex-row gap-2 items-center">
                       <Avatar className="cursor-pointer">
                         <AvatarImage src={user?.photoURL} />
-                        <AvatarFallback>
+                        <AvatarFallback className="bg-blue-950 text-primary-100">
                           {user?.name.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
