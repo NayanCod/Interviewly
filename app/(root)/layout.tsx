@@ -70,8 +70,9 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
                         </AvatarFallback>
                       </Avatar>
                       {user?.name}
+                      {user?.subscription && <Image src="/crown.png" alt="pro-pack" width={20} height={20}/>}
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground" title={user?.email}>
                       {user?.email}
                     </p>
                     {user?.subscription && (
