@@ -92,7 +92,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           return;
         }
 
-        const res = await signIn({
+        await signIn({
           email,
           idToken,
         });
