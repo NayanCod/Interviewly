@@ -31,7 +31,7 @@ const Subscription = ({ user }: { user: User }) => {
         name: "Interviewly",
         description: "Get unlimited voice interview with one time subscription",
         order_id: orderData.orderId,
-        handler: async function (response: any) {
+        handler: async function (response: RazorPayResponse) {
           const data = {
             orderCreationId: orderData.orderId,
             razorpayPaymentId: response.razorpay_payment_id,
@@ -69,8 +69,8 @@ const Subscription = ({ user }: { user: User }) => {
         },
       };
       const paymentObject = new (window as any).Razorpay(options);
-      paymentObject.on("payment.failed", function (response: any) {
-        toast.error(response.error.description);
+      paymentObject.on("payment.failed", function (response: ErrorResponse) {
+        toast.error(response?.error?.description);
       });
       paymentObject.open();
     } catch (error) {
