@@ -19,7 +19,8 @@ import {
 import { auth } from "@/firebase/client";
 import { googleSignIn, signIn, signUp } from "@/lib/actions/auth.action";
 import { useState } from "react";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeClosed, LockKeyholeOpen } from "lucide-react";
+import { removeUserData } from "@/lib/actions/general.action";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -35,6 +36,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   const formSchema = authFormSchema(type);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,6 +78,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
         router.push("/sign-in");
       } else {
         const { email, password } = values;
+        console.log("email", email, "password", password);
 
         setLoading(true);
         const userCredentials = await signInWithEmailAndPassword(
@@ -144,6 +147,42 @@ const AuthForm = ({ type }: { type: FormType }) => {
     }
   };
 
+  const handleDemoLogin = async () => {
+    setDemoLoading(true);
+    try {
+      const demoEmail = "demo@dev.com";
+      const demoPassword = "Demo@123";
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        demoEmail,
+        demoPassword
+      );
+      const idToken = await userCredentials.user.getIdToken();
+
+        if (!idToken) {
+          toast.error("Sign in failed");
+          setLoading(false);
+          return;
+        }
+
+        await removeUserData(userCredentials?.user?.uid);
+
+        await signIn({
+          email: demoEmail,
+          idToken,
+        });
+
+        toast.success("Sign in successfully!");
+        router.push("/");
+        setDemoLoading(false);
+    } catch (error) {
+      console.log("error", error);
+      toast.error(`There was an error ${error}`);
+      setDemoLoading(false);
+    }
+  }
+
+
   return (
     <div className="card-border lg:min-w-[556px]">
       <div className="flex flex-col gap-6 card md:py-14 py-12 px-10">
@@ -198,6 +237,17 @@ const AuthForm = ({ type }: { type: FormType }) => {
             </Button>
           </form>
         </Form>
+
+        <div className="flex flex-col gap-4">
+          <Button
+            className="btn-google w-full cursor-pointer"
+            onClick={handleDemoLogin}
+            disabled={demoLoading}
+          >
+            <LockKeyholeOpen />
+            {demoLoading ? "Signing in..." : "Continue with Demo"}
+          </Button>
+        </div>
 
         <div className="flex flex-row items-center justify-center gap-2">
           <hr className="bg-white w-full" />
