@@ -192,3 +192,51 @@ export async function userPurchasedSubscription(userId: string) {
     return { success: false };
   }
 }
+
+export async function removeUserData(userId: string) {
+  try {
+    // Step 1: Get all interviews created by the user
+    const interviews = await db
+      .collection("interviews")
+      .where("userId", "==", userId)
+      .get();
+
+    // Step 2: Delete all interviews
+    const interviewDeletePromises = interviews.docs.map(async (doc) => {
+      await db.collection("interviews").doc(doc.id).delete();
+    });
+
+    // Step 3: Get all feedback records for the user
+    const feedbacks = await db
+      .collection("feedback")
+      .where("userId", "==", userId)
+      .get();
+
+    // Step 4: Delete all feedback records
+    const feedbackDeletePromises = feedbacks.docs.map(async (doc) => {
+      await db.collection("feedback").doc(doc.id).delete();
+    });
+
+    // Step 5: Execute all delete operations in parallel
+    await Promise.all([...interviewDeletePromises, ...feedbackDeletePromises]);
+
+    // Step 6: Set subscription to false
+    await db.collection("users").doc(userId).update({
+      subscription: false,
+    });
+
+    return {
+      success: true,
+      message: "User data removed successfully",
+      interviewsRemoved: interviews.size,
+      feedbacksRemoved: feedbacks.size
+    };
+  } catch (error) {
+    console.error("Error removing user data:", error);
+    return { 
+      success: false,
+      message: "Failed to remove user data",
+      error: error instanceof Error ? error.message : String(error)
+    };
+  }
+}
