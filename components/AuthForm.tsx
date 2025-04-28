@@ -223,7 +223,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 text-sm text-gray-500"
+                className="absolute right-3 top-1/2 text-sm text-gray-500 cursor-pointer"
                 onClick={() => setShowPassword((prev) => !prev)}
               >
                 {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}

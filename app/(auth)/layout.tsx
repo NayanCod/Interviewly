@@ -1,4 +1,3 @@
-import DemoLogin from "@/components/DemoLogin";
 import { isAuthenticated } from "@/lib/actions/auth.action";
 import { redirect } from "next/navigation";
 import React, { ReactNode } from "react";
@@ -9,7 +8,6 @@ const AuthLayout = async ({ children }: { children: ReactNode }) => {
   if (isUserAuthenticated) redirect("/");
   return (
     <>
-      <DemoLogin />
       <div className="auth-layout">{children}</div>
     </>
   );
