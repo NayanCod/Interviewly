@@ -17,10 +17,18 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/firebase/client";
-import { googleSignIn, signIn, signUp } from "@/lib/actions/auth.action";
-import { useState } from "react";
-import { Eye, EyeClosed, LockKeyholeOpen } from "lucide-react";
+import {
+  googleSignIn,
+  sendOtp,
+  signIn,
+  signUp,
+  verifyOtp,
+} from "@/lib/actions/auth.action";
+import { useEffect, useState } from "react";
+import { CircleCheckBig, Eye, EyeClosed, LockKeyholeOpen } from "lucide-react";
 import { removeUserData } from "@/lib/actions/general.action";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "./ui/input-otp";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -34,9 +42,34 @@ const authFormSchema = (type: FormType) => {
 const AuthForm = ({ type }: { type: FormType }) => {
   const router = useRouter();
   const formSchema = authFormSchema(type);
+
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
+
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [loadingSendOtp, setLoadingSendOtp] = useState(false);
+  const [loadingVerifyOtp, setLoadingVerifyOtp] = useState(false);
+
+  const [resendTimer, setResendTimer] = useState(0);
+  const [resendDisabled, setResendDisabled] = useState(false);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (resendTimer > 0) {
+      setResendDisabled(true);
+      interval = setInterval(() => {
+        setResendTimer((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (resendTimer === 0 && resendDisabled) {
+      setResendDisabled(false);
+    }
+    
+    return () => clearInterval(interval);
+  }, [resendTimer, resendDisabled]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,9 +80,56 @@ const AuthForm = ({ type }: { type: FormType }) => {
     },
   });
 
+  const handleSendOtp = async () => {
+    if (!form.getValues("email")) {
+      toast.error("Please enter your email first!");
+      return;
+    }
+    try {
+      setLoadingSendOtp(true);
+      const res = await sendOtp(form.getValues("email"));
+      if (res?.success) {
+        setIsOtpSent(true);
+        toast.success("OTP sent to your email!\nPlease check your spam folder in case.");
+        setResendTimer(120);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send OTP");
+    } finally {
+      setLoadingSendOtp(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otp) {
+      toast.error("Please enter the OTP first!");
+      return;
+    }
+    try {
+      setLoadingVerifyOtp(true);
+      const res = await verifyOtp(form.getValues("email"), otp);
+      if (res?.success) {
+        setIsEmailVerified(true);
+        toast.success("Email verified successfully!");
+      }else{
+        toast.error(res?.message || "Failed to verify OTP");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to verify OTP");
+    }finally{
+      setLoadingVerifyOtp(false);
+    }
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (type === "sign-up") {
+        if (!isEmailVerified || !isOtpSent) {
+          toast.error("Please verify your email first!");
+          return;
+        }
         const { name, email, password } = values;
         setLoading(true);
 
@@ -124,7 +204,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
       // Get the ID token for backend verification
       const idToken = await user.getIdToken();
-      
+
       // Send the token to your backend for further processing
       const res = await googleSignIn({
         email: user.email!,
@@ -132,7 +212,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
         photoURL: user.photoURL!,
         idToken,
       });
-      
+
       if (res?.success) {
         toast.success("Signed in with Google successfully!");
         router.push("/");
@@ -159,29 +239,28 @@ const AuthForm = ({ type }: { type: FormType }) => {
       );
       const idToken = await userCredentials.user.getIdToken();
 
-        if (!idToken) {
-          toast.error("Sign in failed");
-          setLoading(false);
-          return;
-        }
+      if (!idToken) {
+        toast.error("Sign in failed");
+        setLoading(false);
+        return;
+      }
 
-        await removeUserData(userCredentials?.user?.uid);
+      await removeUserData(userCredentials?.user?.uid);
 
-        await signIn({
-          email: demoEmail,
-          idToken,
-        });
+      await signIn({
+        email: demoEmail,
+        idToken,
+      });
 
-        toast.success("Sign in successfully!");
-        router.push("/");
-        setDemoLoading(false);
+      toast.success("Sign in successfully!");
+      router.push("/");
+      setDemoLoading(false);
     } catch (error) {
       console.log("error", error);
       toast.error(`There was an error ${error}`);
       setDemoLoading(false);
     }
-  }
-
+  };
 
   return (
     <div className="card-border lg:min-w-[556px]">
@@ -206,6 +285,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 placeholder="Your Name"
               />
             )}
+            <div className="relative">
             <FormField
               control={form.control}
               name="email"
@@ -213,6 +293,50 @@ const AuthForm = ({ type }: { type: FormType }) => {
               placeholder="Enter Your Email"
               type="email"
             />
+            {isEmailVerified && <CircleCheckBig color="#00f004" className="absolute right-3 top-[45%]" />}
+            </div>
+            <Button
+              type="button"
+              className={`btn-secondary text-sm ${isOtpSent ? "hidden" : ""} ${
+                isSignIn ? "hidden" : ""
+              }`}
+              onClick={handleSendOtp}
+              disabled={isOtpSent || loadingSendOtp}
+            >
+              { loadingSendOtp ? "Sending OTP..." : "Send OTP"}
+            </Button>
+
+            {isOtpSent && !isEmailVerified && (
+              <div className="flex flex-col justify-center items-center gap-4">
+                <div>
+                  <InputOTP
+                    maxLength={6}
+                    value={otp}
+                    onChange={(val) => setOtp(val)}
+                    pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                  >
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+                <div className="flex flex-row justify-center gap-4 items-center w-full">
+                  <Button className="btn-secondary" onClick={handleSendOtp} disabled={resendDisabled}>
+                  {resendDisabled 
+    ? `Resend (${Math.floor(resendTimer / 60)}:${(resendTimer % 60).toString().padStart(2, '0')})` 
+    : "Resend"}
+                  </Button>
+                  <Button className="btn-primary" onClick={handleVerifyOtp} disabled={otp.length < 6}>
+                    {loadingVerifyOtp ? "Verifying..." : "Verify Otp"}
+                  </Button>
+                </div>
+              </div>
+            )}
             <div className="relative">
               <FormField
                 control={form.control}
