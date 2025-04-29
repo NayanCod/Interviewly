@@ -58,7 +58,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    
+
     if (resendTimer > 0) {
       setResendDisabled(true);
       interval = setInterval(() => {
@@ -67,7 +67,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
     } else if (resendTimer === 0 && resendDisabled) {
       setResendDisabled(false);
     }
-    
+
     return () => clearInterval(interval);
   }, [resendTimer, resendDisabled]);
 
@@ -90,7 +90,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
       const res = await sendOtp(form.getValues("email"));
       if (res?.success) {
         setIsOtpSent(true);
-        toast.success("OTP sent to your email!\nPlease check your spam folder in case.");
+        toast.success(
+          "OTP sent to your email!\nPlease check your spam folder in case."
+        );
         setResendTimer(120);
       }
     } catch (error) {
@@ -112,13 +114,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
       if (res?.success) {
         setIsEmailVerified(true);
         toast.success("Email verified successfully!");
-      }else{
+      } else {
         toast.error(res?.message || "Failed to verify OTP");
       }
     } catch (error) {
       console.error(error);
       toast.error("Failed to verify OTP");
-    }finally{
+    } finally {
       setLoadingVerifyOtp(false);
     }
   };
@@ -286,24 +288,29 @@ const AuthForm = ({ type }: { type: FormType }) => {
               />
             )}
             <div className="relative">
-            <FormField
-              control={form.control}
-              name="email"
-              label="Email"
-              placeholder="Enter Your Email"
-              type="email"
-            />
-            {isEmailVerified && <CircleCheckBig color="#00f004" className="absolute right-3 top-[45%]" />}
+              <FormField
+                control={form.control}
+                name="email"
+                label="Email"
+                placeholder="Enter Your Email"
+                type="email"
+              />
+              {isEmailVerified && (
+                <CircleCheckBig
+                  color="#00f004"
+                  className="absolute right-3 top-[45%]"
+                />
+              )}
             </div>
             <Button
               type="button"
-              className={`btn-secondary text-sm ${isOtpSent ? "hidden" : ""} ${
+              className={`btn-primary text-sm ${isOtpSent ? "hidden" : ""} ${
                 isSignIn ? "hidden" : ""
               }`}
               onClick={handleSendOtp}
               disabled={isOtpSent || loadingSendOtp}
             >
-              { loadingSendOtp ? "Sending OTP..." : "Send OTP"}
+              {loadingSendOtp ? "Sending OTP..." : "Send OTP"}
             </Button>
 
             {isOtpSent && !isEmailVerified && (
@@ -326,12 +333,24 @@ const AuthForm = ({ type }: { type: FormType }) => {
                   </InputOTP>
                 </div>
                 <div className="flex flex-row justify-center gap-4 items-center w-full">
-                  <Button className="btn-secondary" onClick={handleSendOtp} disabled={resendDisabled}>
-                  {resendDisabled 
-    ? `Resend (${Math.floor(resendTimer / 60)}:${(resendTimer % 60).toString().padStart(2, '0')})` 
-    : "Resend"}
+                  <Button
+                    className="btn-secondary"
+                    onClick={handleSendOtp}
+                    disabled={resendDisabled}
+                  >
+                    {resendDisabled
+                      ? `Resend (${Math.floor(resendTimer / 60)}:${(
+                          resendTimer % 60
+                        )
+                          .toString()
+                          .padStart(2, "0")})`
+                      : "Resend"}
                   </Button>
-                  <Button className="btn-primary" onClick={handleVerifyOtp} disabled={otp.length < 6}>
+                  <Button
+                    className="btn-primary"
+                    onClick={handleVerifyOtp}
+                    disabled={otp.length < 6}
+                  >
                     {loadingVerifyOtp ? "Verifying..." : "Verify Otp"}
                   </Button>
                 </div>
