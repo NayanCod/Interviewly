@@ -294,6 +294,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 label="Email"
                 placeholder="Enter Your Email"
                 type="email"
+                disabled={isEmailVerified}
               />
               {isEmailVerified && (
                 <CircleCheckBig

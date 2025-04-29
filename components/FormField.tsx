@@ -17,9 +17,10 @@ interface FormFieldProps<T extends FieldValues> {
     placeholder: string;
     type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week' | 'color' | 'file' | 'select' | 'textarea';
     options?: { value: string; label: string }[];
+    disabled?: boolean;
 }
 
-const FormField = <T extends FieldValues>({control, name, label, placeholder, type="text", options = []}: FormFieldProps<T>) => (
+const FormField = <T extends FieldValues>({control, name, label, placeholder, type="text", options = [], disabled}: FormFieldProps<T>) => (
   <Controller
     name={name}
     control={control}
@@ -53,6 +54,7 @@ const FormField = <T extends FieldValues>({control, name, label, placeholder, ty
               className="input"
               placeholder={placeholder}
               type={type}
+              disabled={disabled}
               {...field}
             />
           )}
