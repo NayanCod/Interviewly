@@ -19,6 +19,7 @@
     "@radix-ui/react-popover": "^1.1.6",
     "@radix-ui/react-select": "^2.1.6",
     "@radix-ui/react-slot": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.2.4",
     "@vapi-ai/web": "^2.2.5",
     "ai": "^4.2.11",
     "axios": "^1.8.4",

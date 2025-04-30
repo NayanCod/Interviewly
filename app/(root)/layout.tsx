@@ -18,10 +18,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   getCurrentUser,
   isAuthenticated,
   logout,
 } from "@/lib/actions/auth.action";
+import { ChartNoAxesColumn } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -50,6 +57,19 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
           </Link>
           <div className="flex flex-row gap-5 items-center">
             {user && <Subscription user={user} />}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild className="hidden md:flex">
+                  <Link href="/leaderboard"><ChartNoAxesColumn /></Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-dark-200">Leaderboard</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <Link href="/leaderboard" className="md:hidden flex items-center gap-2">
+              <ChartNoAxesColumn />
+            </Link>
             <Popover>
               <PopoverTrigger>
                 <Avatar className="cursor-pointer">
@@ -70,9 +90,19 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
                         </AvatarFallback>
                       </Avatar>
                       {user?.name}
-                      {user?.subscription && <Image src="/crown.png" alt="pro-pack" width={20} height={20}/>}
+                      {user?.subscription && (
+                        <Image
+                          src="/crown.png"
+                          alt="pro-pack"
+                          width={20}
+                          height={20}
+                        />
+                      )}
                     </div>
-                    <p className="text-sm text-muted-foreground" title={user?.email}>
+                    <p
+                      className="text-sm text-muted-foreground"
+                      title={user?.email}
+                    >
                       {user?.email}
                     </p>
                     {user?.subscription && (

@@ -240,3 +240,41 @@ export async function removeUserData(userId: string) {
     };
   }
 }
+
+export async function getUserScores() {
+  const users = await db.collection("users").get();
+  const feedback = await db.collection("feedback").get();
+
+  const userScores = users.docs.map((user) => {
+    const userFeedback = feedback.docs.filter(
+      (f) => f.data().userId === user.id
+    );
+    
+    const totalInterviews = userFeedback.length;
+    
+    const totalImpressions = userFeedback.reduce((sum, f) => 
+      sum + (f.data().totalScore || 0), 0
+    );
+
+    // Calculate maximum possible score (100 points per interview)
+    const maxPossibleScore = totalInterviews * 100;
+
+    return {
+      id: user.id,
+      name: user.data().name,
+      photoUrl: user.data().photoURL,
+      totalImpressions,
+      maxPossibleScore, // Total impression out of this value
+      totalInterviews,  // Total number of interviews completed
+      averageScore: totalInterviews > 0 ? 
+        totalImpressions / totalInterviews : 0
+    };
+  });
+
+  // Sort by total impressions in descending order
+  userScores.sort((a, b) => b.totalImpressions - a.totalImpressions);
+  if (userScores.length > 20) userScores.length = 20;
+  userScores.sort((a, b) => b.totalImpressions - a.totalImpressions);
+  
+  return userScores;
+}

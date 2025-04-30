@@ -149,3 +149,13 @@ interface ErrorResponse {
     };
   };
 }
+
+interface Leaderboards {
+  id: string;
+  name: string;
+  totalImpressions: number;
+  maxPossibleScore: number;
+  totalInterviews: number;
+  averageScore: number;
+  photoUrl?: string;
+}
