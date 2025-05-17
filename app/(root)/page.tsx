@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import JoyrideTour from "@/components/JoyrideTour";
 
 const page = async () => {
   const user = await getCurrentUser();
@@ -27,6 +28,7 @@ const page = async () => {
   const hasUpcommingInterviews = (latestInterviews ?? []).length > 0;
   return (
     <>
+    <JoyrideTour />
       <section className="card-cta">
         <div className="flex flex-col gap-6 max-w-lg">
           <h2>Get Interview Ready with AI-Powered Practice & Feedback</h2>
@@ -73,7 +75,7 @@ const page = async () => {
         </div>
       </section>
 
-      <section className="flex flex-col gap-6 mt-8">
+      <section className="available-interview flex flex-col gap-6 mt-8">
         <h2>Take an Interview</h2>
 
         <div className="interviews-section">
