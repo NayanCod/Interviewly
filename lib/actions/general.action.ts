@@ -242,7 +242,9 @@ export async function removeUserData(userId: string) {
 }
 
 export async function getUserScores() {
-  const users = await db.collection("users").get();
+  const users = await db.collection("users")
+  .where("email", "!=", "demo@dev.com")
+  .get();
   const feedback = await db.collection("feedback").get();
 
   const userScores = users.docs.map((user) => {

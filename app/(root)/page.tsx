@@ -15,7 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import JoyrideTour from "@/components/JoyrideTour";
+// import JoyrideTour from "@/components/JoyrideTour";
 
 const page = async () => {
   const user = await getCurrentUser();
@@ -28,7 +28,7 @@ const page = async () => {
   const hasUpcommingInterviews = (latestInterviews ?? []).length > 0;
   return (
     <>
-    <JoyrideTour />
+    {/* <JoyrideTour /> */}
       <section className="card-cta">
         <div className="flex flex-col gap-6 max-w-lg">
           <h2>Get Interview Ready with AI-Powered Practice & Feedback</h2>
